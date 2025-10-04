@@ -5,6 +5,6 @@ framework = arduino
 monitor_speed = 115200
 
 lib_deps =
-    https://github.com/2dom/PxMatrix.git
-    adafruit/Adafruit GFX Library
-    adafruit/Adafruit BusIO
+  https://github.com/2dom/PxMatrix.git
+  adafruit/Adafruit GFX Library
+  adafruit/Adafruit BusIO
