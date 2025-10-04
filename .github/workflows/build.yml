@@ -23,6 +23,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install platformio
 
+      - name: Install required libraries
+        run: |
+          pio pkg install --library "https://github.com/2dom/PxMatrix.git"
+          pio pkg install --library "adafruit/Adafruit GFX Library"
+          pio pkg install --library "adafruit/Adafruit BusIO"
+          pio pkg install --library "Wire"
+
       - name: Build firmware
         run: pio run -e esp32dev
 
