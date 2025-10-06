@@ -1,20 +1,34 @@
 [env:esp32dev]
-platform = espressif32
-board = esp32dev
-framework = arduino
-monitor_speed = 115200
+platname: Build ESP32 Firmware
 
-lib_deps =
-  https://github.com/2dom/PxMatrix
-  adafruit/Adafruit GFX Library@^1.11.5
-  adafruit/RTClib@^2.1.4
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
-build_flags =
-  -D P10_RGB_PANEL
-  -D PANEL_RES_X=64
-  -D PANEL_RES_Y=16
-  -D PANEL_CHAIN=2
-  -D RTC_DS3231
-  -D BRIGHTNESS=75
-  -D TIMEZONE="Asia/Jakarta"
-  -D WIFI_SSID="12345678"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install PlatformIO
+        run: |
+          python -m pip install --upgrade pip
+          pip install platformio
+
+      - name: Build firmware
+        run: pio run -e esp32dev
+
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-bin
+          path: .pio/build/esp32dev/firmware.bin
