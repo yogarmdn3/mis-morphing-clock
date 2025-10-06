@@ -1,5 +1,4 @@
-[env:esp32dev]
-platname: Build ESP32 Firmware
+name: Build ESP32 Firmware
 
 on:
   push:
