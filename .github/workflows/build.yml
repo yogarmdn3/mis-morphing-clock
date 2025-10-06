@@ -23,6 +23,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install platformio
 
+      - name: Pre-install dependencies manually
+        run: |
+          mkdir -p ~/Arduino/libraries
+          git clone https://github.com/2dom/PxMatrix.git ~/Arduino/libraries/PxMatrix
+          git clone https://github.com/adafruit/Adafruit-GFX-Library.git ~/Arduino/libraries/Adafruit_GFX
+          git clone https://github.com/adafruit/RTClib.git ~/Arduino/libraries/RTClib
+
       - name: Build firmware
         run: pio run -e esp32dev
 
