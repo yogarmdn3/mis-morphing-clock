@@ -2,8 +2,7 @@ name: Build ESP32 firmware
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -12,30 +11,32 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.10'
 
       - name: Install PlatformIO
-        run: pip install platformio
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install platformio
 
-      - name: Prepare libraries (use compatible versions)
+      - name: Prepare Arduino-style libraries (compat)
         run: |
           mkdir -p ~/Arduino/libraries
-          git clone https://github.com/2dom/PxMatrix.git ~/Arduino/libraries/PxMatrix
-          cd ~/Arduino/libraries/PxMatrix && git checkout 1.8.2
-          git clone https://github.com/adafruit/Adafruit-GFX-Library.git ~/Arduino/libraries/Adafruit_GFX
-          git clone https://github.com/adafruit/RTClib.git ~/Arduino/libraries/RTClib
+          git clone https://github.com/2dom/PxMatrix.git ~/Arduino/libraries/PxMatrix || true
+          cd ~/Arduino/libraries/PxMatrix && git fetch --all && git checkout 1.8.2 || true
+          git clone https://github.com/adafruit/Adafruit-GFX-Library.git ~/Arduino/libraries/Adafruit_GFX || true
+          git clone https://github.com/adafruit/RTClib.git ~/Arduino/libraries/RTClib || true
 
       - name: Build firmware
         run: |
-          pio run
+          pio run -e esp32dev
 
       - name: Upload firmware artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: firmware-bin
           path: .pio/build/esp32dev/firmware.bin
